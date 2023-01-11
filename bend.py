@@ -16,7 +16,7 @@ from pathlib import Path
 from realtimePlot import *
 from bend_protocol import *
 
-
+bool didyoucheck = 0
 
 class BendWindow(QMainWindow):
     def __init__(self):
@@ -245,32 +245,37 @@ class BendWindow(QMainWindow):
         self.test_stopped_callback()
 
     def onclick_save(self):
-        try:
-            root = QFileDialog.getExistingDirectory(
-                self, caption='Save File', directory=os.path.join('./report'))
-            if root:
-                now = datetime.datetime.now().strftime('%Y%m%d_%H_%M_%S')
-                test_parameter = '_'.join(
-                    f'{k}={v}' for k, v in self.cache.test_parameter.items())
-                folder_name = now + '_' + test_parameter
-                dictionary = os.path.join(root, folder_name)
-                os.mkdir(dictionary)
+        global didyoucheck
+        if didyoucheck == 0:
+            self.toggle_saveWindow()
+        else:
+            didyoucheck=0
+            try:
+                root = QFileDialog.getExistingDirectory(
+                    self, caption='Save File', directory=os.path.join('./report'))
+                if root:
+                    now = datetime.datetime.now().strftime('%Y%m%d_%H_%M_%S')
+                    test_parameter = '_'.join(
+                        f'{k}={v}' for k, v in self.cache.test_parameter.items())
+                    folder_name = now + '_' + test_parameter
+                    dictionary = os.path.join(root, folder_name)
+                    os.mkdir(dictionary)
 
-                self.plot1.export(path=os.path.join(
-                    dictionary, self.plot1.getPlotItem().titleLabel.text + '.png'))
-                self.plot2.export(path=os.path.join(
-                    dictionary, self.plot2.getPlotItem().titleLabel.text + '.png'))
-                self.plot3.export(path=os.path.join(
-                    dictionary, self.plot3.getPlotItem().titleLabel.text + '.png'))
-                self.plot4.export(path=os.path.join(
-                    dictionary, self.plot4.getPlotItem().titleLabel.text + '.png'))
-                self.cache.save(os.path.join(dictionary, 'data.csv'))
+                    self.plot1.export(path=os.path.join(
+                        dictionary, self.plot1.getPlotItem().titleLabel.text + '.png'))
+                    self.plot2.export(path=os.path.join(
+                        dictionary, self.plot2.getPlotItem().titleLabel.text + '.png'))
+                    self.plot3.export(path=os.path.join(
+                        dictionary, self.plot3.getPlotItem().titleLabel.text + '.png'))
+                    self.plot4.export(path=os.path.join(
+                        dictionary, self.plot4.getPlotItem().titleLabel.text + '.png'))
+                    self.cache.save(os.path.join(dictionary, 'data.csv'))
+                    self.textBrowser_data.append(
+                        f'Save successfully!\nResult is saved to: {dictionary}')
+
+            except Exception as e:
                 self.textBrowser_data.append(
-                    f'Save successfully!\nResult is saved to: {dictionary}')
-
-        except Exception as e:
-            self.textBrowser_data.append(
-                f'Save failed!\n{e}')
+                    f'Save failed!\n{e}')
 
     def test_started_callback(self):
         self.groupBox_test_configuration.setEnabled(False)
@@ -413,6 +418,7 @@ class Savebynumber(QMainWindow):
         ui_file.close()
 
     def onclick_newsave(self):
+        global didyoucheck
         project = self.spinBox_Project.value()
         design = self.spinBox_Design.value()
         sample = self.spinBox_Sample.value()
@@ -434,6 +440,7 @@ class Savebynumber(QMainWindow):
                                      'C_Parameter': f_Parameter,
                                      'D_Parameter': g_Parameter,}
         print(self.sample_parameter)
+        didyoucheck = 1
     
     
 
