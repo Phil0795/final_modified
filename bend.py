@@ -9,9 +9,13 @@ from PyQt6 import uic
 from PyQt6.QtCore import QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QVBoxLayout, QFileDialog
 from serial.tools import list_ports
-
+from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtCore import QFile
+from PySide6.QtUiTools import QUiLoader
+from pathlib import Path
 from realtimePlot import *
 from bend_protocol import *
+
 
 
 class BendWindow(QMainWindow):
@@ -21,6 +25,7 @@ class BendWindow(QMainWindow):
 
         # Data cache initialzation
         self.cache = Cache()
+        self.savew = Savebynumber()
 
         # Serial prot initialzation
         self.serial_arduino = serial.Serial()
@@ -66,7 +71,7 @@ class BendWindow(QMainWindow):
 
 
         # Button configuration
-        self.pushButton_connect.clicked.connect(self.onclick_connect)
+        self.pushButton_connect.clicked.connect(self.toggle_saveWindow)
         self.pushButton_refresh.clicked.connect(self.onclick_refresh)
         self.pushButton_launch.clicked.connect(self.onclick_launch)
         self.pushButton_stop.clicked.connect(self.onclick_stop)
@@ -287,6 +292,14 @@ class BendWindow(QMainWindow):
         self.pushButton_pause.setEnabled(False)
         self.pushButton_save.setEnabled(True)
 
+    def toggle_saveWindow(self, checked):
+        print(self.savew.sample_parameter)
+        if self.savew.isVisible():
+            self.savew.hide()
+
+        else:
+            self.savew.show()
+
     def closeEvent(self, event):
         try:
             self.serial_arduino.write(str(ARDUINO_TELEGRAM_PROGRESS_CONTROL_REQUEST(ARDUINO_TEST_STOP)).encode(encoding='UTF-8'))
@@ -379,6 +392,50 @@ class DataReceiver(QThread):
         V_reference = float(raw_data_list[7])
         reference_channel = int(raw_data_list[8])
         return timestamp, step, R_longitudinal, R_lateral, V_longitudinal, V_lateral, V_reference, reference_channel
+
+
+class Savebynumber(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("C:/Users/Messknecht/OneDrive - tu-braunschweig.de/Desktop/Bend_aktuell/final_modified/ui/saveform.ui",self)
+        #self.load_ui()
+        self.sample_parameter= {}
+
+        #Button configuration
+        self.pushButton_Save.clicked.connect(self.onclick_newsave)
+
+    def load_ui(self):
+        loader = QUiLoader()
+        path = "C:/Users/Messknecht/OneDrive - tu-braunschweig.de/Desktop/Bend_aktuell/final_modified/ui/saveform.ui"
+        ui_file = QFile(path)
+        ui_file.open(QFile.ReadOnly)
+        loader.load(ui_file, self)
+        ui_file.close()
+
+    def onclick_newsave(self):
+        project = self.spinBox_Project.value()
+        design = self.spinBox_Design.value()
+        sample = self.spinBox_Sample.value()
+        material = self.spinBox_Material.value()
+        characteristics = self.spinBox_Characteristics.value()
+        orientation = self.spinBox_Orientation.value()
+        a_Parameter = self.spinBox_APara.value()
+        b_Parameter = self.spinBox_BPara.value()
+        f_Parameter = self.spinBox_FPara.value()
+        g_Parameter = self.spinBox_GPara.value()
+        self.sample_parameter = {'Project': project,
+                                     'Design': design,
+                                     'Sample': sample,
+                                     'Material': material,
+                                     'Print Characteristics': characteristics,
+                                     'Orientation': orientation,
+                                     'A-Parameter': a_Parameter,
+                                     'B_Parameter': b_Parameter,
+                                     'C_Parameter': f_Parameter,
+                                     'D_Parameter': g_Parameter,}
+        print(self.sample_parameter)
+    
+    
 
 
 class Cache:
