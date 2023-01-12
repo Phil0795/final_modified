@@ -16,7 +16,8 @@ from pathlib import Path
 from realtimePlot import *
 from bend_protocol import *
 
-bool didyoucheck = 0
+didyoucheck = 0
+contacts = 1
 
 class BendWindow(QMainWindow):
     def __init__(self):
@@ -26,6 +27,7 @@ class BendWindow(QMainWindow):
         # Data cache initialzation
         self.cache = Cache()
         self.savew = Savebynumber()
+        self.contexplain = ContactExplain()
 
         # Serial prot initialzation
         self.serial_arduino = serial.Serial()
@@ -71,10 +73,12 @@ class BendWindow(QMainWindow):
 
 
         # Button configuration
-        self.pushButton_connect.clicked.connect(self.toggle_saveWindow)
+        self.pushButton_connect.clicked.connect(self.onclick_connect)
+        self.pushButton_contacts.clicked.connect(self.explaincontacts)
         self.pushButton_refresh.clicked.connect(self.onclick_refresh)
         self.pushButton_launch.clicked.connect(self.onclick_launch)
         self.pushButton_stop.clicked.connect(self.onclick_stop)
+        self.pushButton_spchange.clicked.connect(self.toggle_saveWindow)
         self.pushButton_save.clicked.connect(self.onclick_save)
         self.pushButton_pause.clicked.connect(self.onclick_pause)
         self.pushButton_clear_text.clicked.connect(self.textBrowser_data.clear)
@@ -179,10 +183,12 @@ class BendWindow(QMainWindow):
             [i.device for i in list(list_ports.comports())])
 
     def onclick_launch(self):
+        global contacts
         bending_direction = self.comboBox_direction.currentIndex()
         bending_speed = self.spinBox_speed.value()  # in r/min
         cycles = self.spinBox_cycles.value()
         steps = self.spinBox_steps.value()
+        contacts = self.spinBox_contacts.value()
         self.serial_arduino.write(bytes(str(ARDUINO_TELEGRAM_SET_PARAMETER_REQUEST(
             bending_direction=bending_direction, bending_speed=bending_speed, cycles=cycles, steps=steps)), 'UTF-8'))
 
@@ -198,6 +204,7 @@ class BendWindow(QMainWindow):
                                      'bending_speed': bending_speed,
                                      'cycles': cycles,
                                      'steps': steps,
+                                     'contacts': contacts,
                                      'sample_rate': sample_rate,
                                      'downsample': downsample,
                                      'reference': self.comboBox_reference.currentText(), }
@@ -297,13 +304,20 @@ class BendWindow(QMainWindow):
         self.pushButton_pause.setEnabled(False)
         self.pushButton_save.setEnabled(True)
 
-    def toggle_saveWindow(self, checked):
+    def toggle_saveWindow(self):
         print(self.savew.sample_parameter)
         if self.savew.isVisible():
             self.savew.hide()
 
         else:
             self.savew.show()
+
+    def explaincontacts(self, checked):
+        if self.contexplain.isVisible():
+            self.contexplain.hide()
+
+        else:
+            self.contexplain.show()
 
     def closeEvent(self, event):
         try:
@@ -442,7 +456,18 @@ class Savebynumber(QMainWindow):
         print(self.sample_parameter)
         didyoucheck = 1
     
-    
+class ContactExplain(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.load_ui()
+
+    def load_ui(self):
+        loader = QUiLoader()
+        path = "C:/Users/Messknecht/OneDrive - tu-braunschweig.de/Desktop/Bend_aktuell/final_modified/ui/contactexplain.ui"
+        ui_file = QFile(path)
+        ui_file.open(QFile.ReadOnly)
+        loader.load(ui_file, self)
+        ui_file.close()   
 
 
 class Cache:
