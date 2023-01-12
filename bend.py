@@ -261,7 +261,9 @@ class BendWindow(QMainWindow):
                 root = QFileDialog.getExistingDirectory(
                     self, caption='Save File', directory=os.path.join('./report'))
                 if root:
-                    now = datetime.datetime.now().strftime('%Y%m%d_%H_%M_%S')
+                    sample_parameter = '_'.join(
+                        f'{k}{v}' for k, v in self.savew.sample_parameter.items())
+                    now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
                     folder_name = now + '_' + test_parameter
@@ -443,16 +445,21 @@ class Savebynumber(QMainWindow):
         b_Parameter = self.spinBox_BPara.value()
         f_Parameter = self.spinBox_FPara.value()
         g_Parameter = self.spinBox_GPara.value()
-        self.sample_parameter = {'Project': project,
-                                     'Design': design,
-                                     'Sample': sample,
-                                     'Material': material,
-                                     'Print Characteristics': characteristics,
-                                     'Orientation': orientation,
-                                     'A-Parameter': a_Parameter,
-                                     'B_Parameter': b_Parameter,
-                                     'C_Parameter': f_Parameter,
-                                     'D_Parameter': g_Parameter,}
+        self.sample_parameter = {'P': project,
+                                     'D': design,
+                                     'S': sample,
+                                     'M': material,
+                                     'C': characteristics,
+                                     'O': orientation,}
+        if a_Parameter != 0:
+            self.sample_parameter.update({'A': a_Parameter})
+        if b_Parameter != 0:
+            self.sample_parameter.update({'B': b_Parameter})
+        if f_Parameter != 0:
+            self.sample_parameter.update({'F': f_Parameter})
+        if g_Parameter != 0:
+            self.sample_parameter.update({'G': g_Parameter})
+
         print(self.sample_parameter)
         didyoucheck = 1
     
