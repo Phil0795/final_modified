@@ -278,7 +278,7 @@ class BendWindow(QMainWindow):
                         dictionary, self.plot3.getPlotItem().titleLabel.text + '.png'))
                     self.plot4.export(path=os.path.join(
                         dictionary, self.plot4.getPlotItem().titleLabel.text + '.png'))
-                    self.cache.save(os.path.join(dictionary, 'data.csv'))
+                    self.cache.save(os.path.join(dictionary, f'{now}.csv'))
                     self.textBrowser_data.append(
                         f'Save successfully!\nResult is saved to: {dictionary}')
 
