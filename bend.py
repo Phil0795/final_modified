@@ -67,14 +67,14 @@ class BendWindow(QMainWindow):
                                 ylabel2_text='Relation %', ylabel2_unit=None,
                                 show_y='y1',
                                 history_size=2500,
-                                title='1/(R1/R2+1)-Step')
+                                title='1/(R_long/R_lat+1)-Step')
 
         self.plot6 = LinePlot2Y(xlabel_text='Time', xlabel_unit='s',
                                 ylabel1_text='Relation', ylabel1_unit=None,
                                 ylabel2_text='Relation %', ylabel2_unit=None,
                                 show_y='y1',
                                 history_size=2500,
-                                title='1/(R1/R2+1)-Time')                        
+                                title='1/(R_long/R_lat+1)-Time')                        
 
         self.plot_area1.setLayout(QVBoxLayout())
         self.plot_area1.layout().addWidget(self.plot1)
@@ -422,12 +422,12 @@ class DataReceiver(QThread):
                         init_R_longitudinal = R_longitudinal
                     if init_R_lateral == None:
                         init_R_lateral = R_lateral
-                    R_relation = (1/(R_lateral/R_longitudinal +1))
+                    R_relation = (1/(R_longitudinal/R_lateral +1))
                     if init_R_relation == None:
                         init_R_relation = R_relation
 
                     self.update_textBroswer.emit(
-                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_longitudinal: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
+                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_lateral: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
                     self.update_cache.emit([timestamp, step, R_longitudinal, R_lateral])
                     self.update_plot1.emit(
                         step, R_longitudinal, R_longitudinal/init_R_longitudinal)
