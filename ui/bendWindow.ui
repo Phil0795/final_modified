@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1104</width>
+    <width>1400</width>
     <height>877</height>
    </rect>
   </property>
@@ -79,7 +79,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1084</width>
+            <width>1380</width>
             <height>38</height>
            </rect>
           </property>
@@ -917,7 +917,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>807</width>
+                 <width>1100</width>
                  <height>539</height>
                 </rect>
                </property>
@@ -938,6 +938,12 @@
                   </property>
                  </widget>
                 </item>
+                <item row="1" column="1">
+                 <widget class="QWidget" name="plot_area3" native="true"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QWidget" name="plot_area4" native="true"/>
+                </item>
                 <item row="0" column="2">
                  <widget class="QWidget" name="plot_area2" native="true">
                   <property name="sizePolicy">
@@ -954,11 +960,11 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QWidget" name="plot_area3" native="true"/>
+                <item row="0" column="3">
+                 <widget class="QWidget" name="plot_area5" native="true"/>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QWidget" name="plot_area4" native="true"/>
+                <item row="1" column="3">
+                 <widget class="QWidget" name="plot_area6" native="true"/>
                 </item>
                </layout>
               </widget>
@@ -1036,7 +1042,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1104</width>
+     <width>1400</width>
      <height>22</height>
     </rect>
    </property>
@@ -1056,9 +1062,9 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_RT_long"/>
-  <buttongroup name="buttonGroup_RS_lat"/>
   <buttongroup name="buttonGroup_RS_long"/>
+  <buttongroup name="buttonGroup_RS_lat"/>
   <buttongroup name="buttonGroup_RT_lat"/>
+  <buttongroup name="buttonGroup_RT_long"/>
  </buttongroups>
 </ui>

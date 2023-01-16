@@ -62,14 +62,32 @@ class BendWindow(QMainWindow):
                                 history_size=2500,
                                 title='R_lateral-Time')
 
+        self.plot5 = ScatterPlot2Y(xlabel_text='Step', xlabel_unit=None,
+                                ylabel1_text='Relation', ylabel1_unit=None,
+                                ylabel2_text='Relation %', ylabel2_unit=None,
+                                show_y='y1',
+                                history_size=2500,
+                                title='1/(R1/R2+1)-Step')
+
+        self.plot6 = LinePlot2Y(xlabel_text='Time', xlabel_unit='s',
+                                ylabel1_text='Relation', ylabel1_unit=None,
+                                ylabel2_text='Relation %', ylabel2_unit=None,
+                                show_y='y1',
+                                history_size=2500,
+                                title='1/(R1/R2+1)-Time')                        
+
         self.plot_area1.setLayout(QVBoxLayout())
         self.plot_area1.layout().addWidget(self.plot1)
         self.plot_area2.setLayout(QVBoxLayout())
-        self.plot_area2.layout().addWidget(self.plot2)
+        self.plot_area2.layout().addWidget(self.plot3)
         self.plot_area3.setLayout(QVBoxLayout())
-        self.plot_area3.layout().addWidget(self.plot3)
+        self.plot_area3.layout().addWidget(self.plot2)
         self.plot_area4.setLayout(QVBoxLayout())
         self.plot_area4.layout().addWidget(self.plot4)
+        self.plot_area5.setLayout(QVBoxLayout())
+        self.plot_area5.layout().addWidget(self.plot5)
+        self.plot_area6.setLayout(QVBoxLayout())
+        self.plot_area6.layout().addWidget(self.plot6)
 
 
         # Button configuration
@@ -83,7 +101,7 @@ class BendWindow(QMainWindow):
         self.pushButton_pause.clicked.connect(self.onclick_pause)
         self.pushButton_clear_text.clicked.connect(self.textBrowser_data.clear)
         self.pushButton_clear_graph.clicked.connect(
-            lambda: [self.plot1.reset(), self.plot2.reset(), self.plot3.reset(), self.plot4.reset()])
+            lambda: [self.plot1.reset(), self.plot2.reset(), self.plot3.reset(), self.plot4.reset(), self.plot5.reset(), self.plot6.reset()])
 
         # Check box configuration
         self.checkBox_graph1.stateChanged.connect(
@@ -213,6 +231,8 @@ class BendWindow(QMainWindow):
         self.plot2.reset()
         self.plot3.reset()
         self.plot4.reset()
+        self.plot5.reset()
+        self.plot6.reset()
 
         self.receive_data_thread = DataReceiver(
             self.serial_arduino, self.serial_psoc)
@@ -224,6 +244,8 @@ class BendWindow(QMainWindow):
         self.receive_data_thread.update_plot2.connect(self.plot2.update)
         self.receive_data_thread.update_plot3.connect(self.plot3.update)
         self.receive_data_thread.update_plot4.connect(self.plot4.update)
+        self.receive_data_thread.update_plot5.connect(self.plot5.update)
+        self.receive_data_thread.update_plot6.connect(self.plot6.update)
         self.receive_data_thread.test_finished.connect(
             self.test_stopped_callback)
 
@@ -337,6 +359,8 @@ class DataReceiver(QThread):
     update_plot2 = pyqtSignal(float, float, float)
     update_plot3 = pyqtSignal(float, float, float)
     update_plot4 = pyqtSignal(float, float, float)
+    update_plot5 = pyqtSignal(float, float, float)
+    update_plot6 = pyqtSignal(float, float, float)
 
     test_finished = pyqtSignal()
 
@@ -358,6 +382,7 @@ class DataReceiver(QThread):
         timestamp_start = time.time()
         init_R_longitudinal = None
         init_R_lateral = None
+        init_R_relation = None
         while self.enable:
             if self.serial_setup.in_waiting:
 
@@ -381,9 +406,12 @@ class DataReceiver(QThread):
                         init_R_longitudinal = R_longitudinal
                     if init_R_lateral == None:
                         init_R_lateral = R_lateral
+                    R_relation = (1/(R_lateral/R_longitudinal +1))
+                    if init_R_relation == None:
+                        init_R_relation = R_relation
 
                     self.update_textBroswer.emit(
-                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_longitudinal: {R_lateral:<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
+                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_longitudinal: {R_lateral:<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_relation: {round(R_relation,3):<5} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
                     self.update_cache.emit([timestamp, step, R_longitudinal, R_lateral])
                     self.update_plot1.emit(
                         step, R_longitudinal, R_longitudinal/init_R_longitudinal)
@@ -393,6 +421,10 @@ class DataReceiver(QThread):
                         step, R_lateral, R_lateral/init_R_lateral)
                     self.update_plot4.emit(
                         time.time() - timestamp_start, R_lateral, R_lateral/init_R_lateral)
+                    self.update_plot5.emit(
+                        step, R_relation, R_relation/init_R_relation)
+                    self.update_plot6.emit(
+                        time.time() - timestamp_start, R_relation, R_relation/init_R_relation)    
                 except Exception as e:
                     print(e)
                     continue
