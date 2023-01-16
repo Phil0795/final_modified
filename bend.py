@@ -422,7 +422,7 @@ class DataReceiver(QThread):
                         init_R_longitudinal = R_longitudinal
                     if init_R_lateral == None:
                         init_R_lateral = R_lateral
-                    R_relation = (1/(R_longitudinal/R_lateral +1))
+                    R_relation = round((1/(R_longitudinal/R_lateral +1)), 4)
                     if init_R_relation == None:
                         init_R_relation = R_relation
 
