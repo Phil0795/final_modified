@@ -411,7 +411,7 @@ class DataReceiver(QThread):
                         init_R_relation = R_relation
 
                     self.update_textBroswer.emit(
-                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_longitudinal: {R_lateral:<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_relation: {round(R_relation,3):<5} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
+                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_longitudinal: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
                     self.update_cache.emit([timestamp, step, R_longitudinal, R_lateral])
                     self.update_plot1.emit(
                         step, R_longitudinal, R_longitudinal/init_R_longitudinal)
