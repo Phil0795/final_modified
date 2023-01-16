@@ -112,6 +112,10 @@ class BendWindow(QMainWindow):
             lambda state: [self.plot_area3.hide(), self.plot3.set_update_enable(False)] if state == 0 else [self.plot_area3.show(), self.plot3.set_update_enable(True)])
         self.checkBox_graph4.stateChanged.connect(
             lambda state: [self.plot_area4.hide(), self.plot4.set_update_enable(False)] if state == 0 else [self.plot_area4.show(), self.plot4.set_update_enable(True)])
+        self.checkBox_graph5.stateChanged.connect(
+            lambda state: [self.plot_area5.hide(), self.plot5.set_update_enable(False)] if state == 0 else [self.plot_area5.show(), self.plot5.set_update_enable(True)])
+        self.checkBox_graph6.stateChanged.connect(
+            lambda state: [self.plot_area6.hide(), self.plot6.set_update_enable(False)] if state == 0 else [self.plot_area6.show(), self.plot6.set_update_enable(True)])
 
         # Radion button configuration
         self.radioButton_RS_long_abs.toggled.connect(
@@ -130,6 +134,14 @@ class BendWindow(QMainWindow):
             lambda checked: self.plot4.set_show_y('y1') if checked else None)
         self.radioButton_RT_lat_rel.toggled.connect(
             lambda checked: self.plot4.set_show_y('y2') if checked else None)
+        self.radioButton_RS_rel_abs.toggled.connect(
+            lambda checked: self.plot5.set_show_y('y1') if checked else None)
+        self.radioButton_RS_rel_rel.toggled.connect(
+            lambda checked: self.plot5.set_show_y('y2') if checked else None)
+        self.radioButton_RT_rel_abs.toggled.connect(
+            lambda checked: self.plot6.set_show_y('y1') if checked else None)
+        self.radioButton_RT_rel_rel.toggled.connect(
+            lambda checked: self.plot6.set_show_y('y2') if checked else None)
 
         # ComboBox configuration
         self.comboBox_comports_arduino.addItems(
@@ -300,6 +312,10 @@ class BendWindow(QMainWindow):
                         dictionary, self.plot3.getPlotItem().titleLabel.text + '.png'))
                     self.plot4.export(path=os.path.join(
                         dictionary, self.plot4.getPlotItem().titleLabel.text + '.png'))
+                    self.plot5.export(path=os.path.join(
+                        dictionary, self.plot5.getPlotItem().titleLabel.text + '.png'))
+                    self.plot6.export(path=os.path.join(
+                        dictionary, self.plot6.getPlotItem().titleLabel.text + '.png'))
                     self.cache.save(os.path.join(dictionary, f'{now}.csv'))
                     self.textBrowser_data.append(
                         f'Save successfully!\nResult is saved to: {dictionary}')

@@ -266,7 +266,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>273</width>
-                <height>790</height>
+                <height>872</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -559,6 +559,19 @@
                 </spacer>
                </item>
                <item>
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
                 <widget class="QGroupBox" name="groupBox_graph_setting">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -570,6 +583,19 @@
                   <string>Graph Setting</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_3">
+                  <item row="2" column="0">
+                   <spacer name="verticalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item row="0" column="0">
                    <layout class="QVBoxLayout" name="verticalLayout_9">
                     <item>
@@ -620,6 +646,13 @@
                     </item>
                    </layout>
                   </item>
+                  <item row="6" column="0">
+                   <widget class="QPushButton" name="pushButton_clear_graph">
+                    <property name="text">
+                     <string>Clear graph</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="1">
                    <layout class="QVBoxLayout" name="verticalLayout_11">
                     <item>
@@ -663,26 +696,6 @@
                      </layout>
                     </item>
                    </layout>
-                  </item>
-                  <item row="2" column="0">
-                   <spacer name="verticalSpacer_2">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QPushButton" name="pushButton_clear_graph">
-                    <property name="text">
-                     <string>Clear graph</string>
-                    </property>
-                   </widget>
                   </item>
                   <item row="1" column="0">
                    <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -778,21 +791,84 @@
                     </item>
                    </layout>
                   </item>
+                  <item row="3" column="0">
+                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                    <item>
+                     <widget class="QCheckBox" name="checkBox_graph5">
+                      <property name="text">
+                       <string>R_rel - Step</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayout_16">
+                      <item>
+                       <widget class="QRadioButton" name="radioButton_RS_rel_abs">
+                        <property name="text">
+                         <string>Absolute</string>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="radioButton_RS_rel_rel">
+                        <property name="text">
+                         <string>Relative (%)</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="1">
+                   <layout class="QVBoxLayout" name="verticalLayout_17">
+                    <item>
+                     <widget class="QCheckBox" name="checkBox_graph6">
+                      <property name="text">
+                       <string>R-rel - Time</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayout_18">
+                      <item>
+                       <widget class="QRadioButton" name="radioButton_RT_rel_abs">
+                        <property name="text">
+                         <string>Absoulte</string>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="radioButton_RT_rel_rel">
+                        <property name="text">
+                         <string>Relative (%)</string>
+                        </property>
+                        <property name="checked">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
                  </layout>
                 </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
                <item>
                 <widget class="QPushButton" name="pushButton_launch">
