@@ -297,7 +297,7 @@ class BendWindow(QMainWindow):
                 if root:
                     sample_parameter = '_'.join(
                         f'{k}{v}' for k, v in self.savew.sample_parameter.items())
-                    now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                    now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
                     folder_name = now + '_' + test_parameter
