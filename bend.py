@@ -300,7 +300,7 @@ class BendWindow(QMainWindow):
                     now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
-                    folder_name = now + '_' + test_parameter
+                    folder_name = sample_parameter + '_' + test_parameter
                     dictionary = os.path.join(root, folder_name)
                     os.mkdir(dictionary)
 
@@ -316,7 +316,7 @@ class BendWindow(QMainWindow):
                         dictionary, self.plot5.getPlotItem().titleLabel.text + '.png'))
                     self.plot6.export(path=os.path.join(
                         dictionary, self.plot6.getPlotItem().titleLabel.text + '.png'))
-                    self.cache.save(os.path.join(dictionary, f'{now}.csv'))
+                    self.cache.save(os.path.join(dictionary, now + '.csv'))
                     self.textBrowser_data.append(
                         f'Save successfully!\nResult is saved to: {dictionary}')
 
