@@ -136,6 +136,13 @@
       </property>
      </widget>
     </item>
+    <item row="10" column="0">
+     <widget class="QRadioButton" name="radioButton_member">
+      <property name="text">
+       <string>Dont ask again</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>

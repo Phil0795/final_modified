@@ -290,17 +290,21 @@ class BendWindow(QMainWindow):
         if didyoucheck == 0:
             self.toggle_saveWindow()
         else:
-            didyoucheck=0
+            if self.savew.radioButton_member.isChecked():
+                didyoucheck=1
+            else:
+                didyoucheck=0
             try:
                 root = QFileDialog.getExistingDirectory(
                     self, caption='Save File', directory=os.path.join('./report'))
                 if root:
                     sample_parameter = '_'.join(
                         f'{k}{v}' for k, v in self.savew.sample_parameter.items())
+                    s_now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                     now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
-                    folder_name = sample_parameter + '_' + test_parameter
+                    folder_name = s_now + '_' + test_parameter
                     dictionary = os.path.join(root, folder_name)
                     os.mkdir(dictionary)
 
