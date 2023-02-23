@@ -304,7 +304,7 @@ class BendWindow(QMainWindow):
                     now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
-                    folder_name = s_now + '_' + test_parameter
+                    folder_name = test_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                     dictionary = os.path.join(root, folder_name)
                     os.mkdir(dictionary)
 
