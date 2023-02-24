@@ -107,9 +107,9 @@ class BendWindow(QMainWindow):
         self.checkBox_graph1.stateChanged.connect(
             lambda state: [self.plot_area1.hide(), self.plot1.set_update_enable(False)] if state == 0 else [self.plot_area1.show(), self.plot1.set_update_enable(True)])
         self.checkBox_graph2.stateChanged.connect(
-            lambda state: [self.plot_area2.hide(), self.plot2.set_update_enable(False)] if state == 0 else [self.plot_area2.show(), self.plot2.set_update_enable(True)])
+            lambda state: [self.plot_area2.hide(), self.plot3.set_update_enable(False)] if state == 0 else [self.plot_area2.show(), self.plot3.set_update_enable(True)])
         self.checkBox_graph3.stateChanged.connect(
-            lambda state: [self.plot_area3.hide(), self.plot3.set_update_enable(False)] if state == 0 else [self.plot_area3.show(), self.plot3.set_update_enable(True)])
+            lambda state: [self.plot_area3.hide(), self.plot2.set_update_enable(False)] if state == 0 else [self.plot_area3.show(), self.plot2.set_update_enable(True)])
         self.checkBox_graph4.stateChanged.connect(
             lambda state: [self.plot_area4.hide(), self.plot4.set_update_enable(False)] if state == 0 else [self.plot_area4.show(), self.plot4.set_update_enable(True)])
         self.checkBox_graph5.stateChanged.connect(
@@ -230,14 +230,14 @@ class BendWindow(QMainWindow):
 
         self.cache = Cache()
 
-        self.cache.test_parameter = {'bending_direction': bending_direction,
-                                     'bending_speed': bending_speed,
-                                     'cycles': cycles,
-                                     'steps': steps,
-                                     'contacts': contacts,
-                                     'sample_rate': sample_rate,
-                                     'downsample': downsample,
-                                     'reference': self.comboBox_reference.currentText(), }
+        self.cache.test_parameter = {'dir': bending_direction,
+                                     'spd': bending_speed,
+                                     'cyc': cycles,
+                                     'stp': steps,
+                                     'con': contacts,
+                                     'srte': sample_rate,
+                                     'dwns': downsample,
+                                     'ref': self.comboBox_reference.currentText(), }
 
         self.plot1.reset()
         self.plot2.reset()
@@ -298,13 +298,13 @@ class BendWindow(QMainWindow):
                 root = QFileDialog.getExistingDirectory(
                     self, caption='Save File', directory=os.path.join('./report'))
                 if root:
-                    sample_parameter = '_'.join(
-                        f'{k}{v}' for k, v in self.savew.sample_parameter.items())
-                    s_now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-                    now = sample_parameter + '_T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
+                    #sample_parameter = '_'.join(
+                        #f'{k}{v}' for k, v in self.savew.sample_parameter.items())
+                    time = 'T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                    #dottime = 'T' + datetime.datetime.now().strftime('%Y.%m.%d.%H.%M.%S')
                     test_parameter = '_'.join(
                         f'{k}={v}' for k, v in self.cache.test_parameter.items())
-                    folder_name = test_parameter + '_T' + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+                    folder_name = test_parameter + time
                     dictionary = os.path.join(root, folder_name)
                     os.mkdir(dictionary)
 
@@ -320,7 +320,7 @@ class BendWindow(QMainWindow):
                         dictionary, self.plot5.getPlotItem().titleLabel.text + '.png'))
                     self.plot6.export(path=os.path.join(
                         dictionary, self.plot6.getPlotItem().titleLabel.text + '.png'))
-                    self.cache.save(os.path.join(dictionary, now + '.csv'))
+                    self.cache.save(os.path.join(dictionary, time + '.csv'), self.savew)
                     self.textBrowser_data.append(
                         f'Save successfully!\nResult is saved to: {dictionary}')
 
@@ -389,6 +389,8 @@ class DataReceiver(QThread):
         self.serial_setup = serial_setup
         self.serial_psoc = serial_psoc
         self.enable = False
+        self.plotupdatecount = 0
+        self.plotupdatespeed = 15
 
     def run(self):
         self.enable = True
@@ -433,18 +435,20 @@ class DataReceiver(QThread):
                     self.update_textBroswer.emit(
                         f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_lateral: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
                     self.update_cache.emit([timestamp, step, R_longitudinal, R_lateral])
-                    self.update_plot1.emit(
-                        step, R_longitudinal, R_longitudinal/init_R_longitudinal)
-                    self.update_plot2.emit(
-                        time.time() - timestamp_start, R_longitudinal, R_longitudinal/init_R_longitudinal)
-                    self.update_plot3.emit(
-                        step, R_lateral, R_lateral/init_R_lateral)
-                    self.update_plot4.emit(
-                        time.time() - timestamp_start, R_lateral, R_lateral/init_R_lateral)
-                    self.update_plot5.emit(
-                        step, R_relation, R_relation/init_R_relation)
-                    self.update_plot6.emit(
-                        time.time() - timestamp_start, R_relation, R_relation/init_R_relation)    
+                    if self.plotupdatecount % self.plotupdatespeed == 0:
+                        self.update_plot1.emit(
+                            step, R_longitudinal, R_longitudinal/init_R_longitudinal)
+                        self.update_plot2.emit(
+                            time.time() - timestamp_start, R_longitudinal, R_longitudinal/init_R_longitudinal)
+                        self.update_plot3.emit(
+                            step, R_lateral, R_lateral/init_R_lateral)
+                        self.update_plot4.emit(
+                            time.time() - timestamp_start, R_lateral, R_lateral/init_R_lateral)
+                        self.update_plot5.emit(
+                            step, R_relation, R_relation/init_R_relation)
+                        self.update_plot6.emit(
+                            time.time() - timestamp_start, R_relation, R_relation/init_R_relation)  
+                    self.plotupdatecount += 1  
                 except Exception as e:
                     print(e)
                     continue
@@ -537,8 +541,10 @@ class Cache:
     def append(self, new_data):
         self.data.append(new_data)
 
-    def save(self, path):
+    def save(self, path, savew):
         with open(path, 'w', newline='', encoding='utf-8') as f:
+            f.write('_'.join(f'{k}{v}' for k, v in savew.sample_parameter.items()))
+            f.write('\n')
             f.write(','.join(f'{k}={v}' for k,
                     v in self.test_parameter.items()))
             f.write('\n')
