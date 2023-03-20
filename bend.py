@@ -18,7 +18,6 @@ from bend_protocol import *
 
 didyoucheck = 0
 contacts = 1
-
 class BendWindow(QMainWindow):
     def __init__(self):
         super().__init__()
