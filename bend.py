@@ -38,28 +38,28 @@ class BendWindow(QMainWindow):
                                    ylabel2_text='R/R0', ylabel2_unit=None,
                                    show_y='y1',
                                    history_size=2500,
-                                   title='R_longitudinal-Step')
+                                   title='R_top-Step')
 
         self.plot2 = LinePlot2Y(xlabel_text='Time', xlabel_unit='s',
                                 ylabel1_text='R', ylabel1_unit='Ohm',
                                 ylabel2_text='R/R0', ylabel2_unit=None,
                                 show_y='y1',
                                 history_size=2500,
-                                title='R_longitudinal-Time')
+                                title='R_top-Time')
 
         self.plot3 = ScatterPlot2Y(xlabel_text='Step', xlabel_unit=None,
                                    ylabel1_text='R', ylabel1_unit='Ohm',
                                    ylabel2_text='R/R0', ylabel2_unit=None,
                                    show_y='y1',
                                    history_size=2500,
-                                   title='R_lateral-Step')
+                                   title='R_bot-Step')
 
         self.plot4 = LinePlot2Y(xlabel_text='Time', xlabel_unit='s',
                                 ylabel1_text='R', ylabel1_unit='Ohm',
                                 ylabel2_text='R/R0', ylabel2_unit=None,
                                 show_y='y1',
                                 history_size=2500,
-                                title='R_lateral-Time')
+                                title='R_bot-Time')
 
         self.plot5 = ScatterPlot2Y(xlabel_text='Step', xlabel_unit=None,
                                 ylabel1_text='Relation', ylabel1_unit=None,
@@ -432,7 +432,7 @@ class DataReceiver(QThread):
                         init_R_relation = R_relation
 
                     self.update_textBroswer.emit(
-                        f'timestamp: {timestamp:<7} step: {step:<5} R_longitudinal: {R_longitudinal:<12} R_lateral: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_longitudinal: {V_longitudinal:<12} V_lateral: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
+                        f'timestamp: {timestamp:<7} step: {step:<5} R_top: {R_longitudinal:<12} R_bot: {R_lateral:<12} R_relation: {round(R_relation,3):<12} V_top: {V_longitudinal:<12} V_bot: {V_lateral:<12} V_reference: {V_reference:<12} reference_channel: {reference_channel:<5}')
                     self.update_cache.emit([timestamp, step, R_longitudinal, R_lateral])
                     if self.plotupdatecount % self.plotupdatespeed == 0:
                         self.update_plot1.emit(
