@@ -21,7 +21,7 @@ contacts = 1
 class BendWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("C:/Users/Messknecht/OneDrive - tu-braunschweig.de/Desktop/Bend_aktuell/final_modified/ui/bendWindow.ui", self)  # load the ui file
+        uic.loadUi("ui/bendWindow.ui", self)  # load the ui file
 
         # Data cache initialzation
         self.cache = Cache()

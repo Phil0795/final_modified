@@ -11,7 +11,7 @@ import about
 class mainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("C:/Users/Messknecht/Desktop/Yang/PC/final/ui/mainWindow.ui", self)  # load the ui file
+        uic.loadUi("ui/mainWindow.ui", self)  # load the ui file
         self.actionAbout.triggered.connect(self.onclick_about)
         self.actionGetStarted.triggered.connect(lambda: QDesktopServices.openUrl(QUrl.fromLocalFile("./doc/Get started.mp4")))
         self.actionDocumentation.triggered.connect(lambda: QDesktopServices.openUrl(QUrl.fromLocalFile("./doc/thesis.pdf")))
